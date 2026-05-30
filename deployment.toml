@@ -1,0 +1,18 @@
+version = "0.3.0"
+environment = "development"
+
+[hardware]
+platform = "apple-m4"
+
+[network]
+api_port = 8000
+host = "127.0.0.1"
+
+[storage]
+database_url = "sqlite:///./juniorcoach.db"
+
+[security]
+secret_key = "change-this-in-production"
+
+[ui]
+theme = "juniorhome-dark"

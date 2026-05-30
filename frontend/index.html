@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JuniorCoach</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { font-family: system-ui, sans-serif; }</style>
+</head>
+<body class="bg-zinc-950 text-zinc-100">
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-4xl font-bold mb-2">JuniorCoach</h1>
+    <p class="text-zinc-400 mb-8">Youth Sports Management</p>
+
+    <div class="flex gap-8 border-b border-zinc-800 mb-8">
+      <button onclick="switchTab(0)" class="tab-active pb-2" id="tab0">Roster</button>
+      <button onclick="switchTab(1)" class="pb-2" id="tab1">Practice Planner</button>
+      <button onclick="switchTab(2)" class="pb-2" id="tab2">Calendar</button>
+    </div>
+
+    <div id="content0" class="tab-content">
+      <div class="flex justify-between mb-4">
+        <h2 class="text-2xl">Athletes</h2>
+        <button onclick="addAthlete()" class="bg-blue-600 px-4 py-2 rounded-lg">+ Add Athlete</button>
+      </div>
+      <div id="athlete-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </div>
+
+    <div id="content1" class="tab-content hidden">
+      <h2 class="text-2xl mb-4">Practice Planner</h2>
+      <div class="bg-zinc-900 p-6 rounded-xl">
+        <input id="practice-title" placeholder="Practice Title" class="bg-zinc-800 p-3 w-full rounded mb-4">
+        <button onclick="createPractice()" class="bg-green-600 px-6 py-3 rounded-lg">Schedule Practice</button>
+      </div>
+      <div id="practice-list" class="mt-6 grid gap-4"></div>
+    </div>
+
+    <div id="content2" class="tab-content hidden">
+      <h2 class="text-2xl mb-4">Schedule</h2>
+      <div id="calendar-list" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(n) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`content${n}`).classList.remove('hidden');
+      document.querySelectorAll('button').forEach((el,i) => {
+        if(i===n) el.classList.add('tab-active'); else el.classList.remove('tab-active');
+      });
+    }
+
+    async function loadAthletes() {
+      const res = await fetch('http://localhost:8000/api/athletes');
+      const data = await res.json();
+      document.getElementById('athlete-list').innerHTML = data.map(a => `
+        <div class="bg-zinc-900 p-5 rounded-xl">
+          <h3 class="font-semibold">${a.name}</h3>
+          <p class="text-sm text-zinc-400">${a.team || 'No Team'}</p>
+        </div>
+      `).join('');
+    }
+
+    async function createPractice() {
+      const title = document.getElementById('practice-title').value || "New Practice";
+      await fetch('http://localhost:8000/api/practices', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title, date: new Date().toISOString()})
+      });
+      alert('Practice scheduled!');
+      loadPractices();
+    }
+
+    async function loadPractices() {
+      const res = await fetch('http://localhost:8000/api/practices');
+      const data = await res.json();
+      document.getElementById('practice-list').innerHTML = data.map(p => `
+        <div class="bg-zinc-900 p-5 rounded-xl">
+          <h3>${p.title}</h3>
+        </div>
+      `).join('');
+    }
+
+    function addAthlete() {
+      const name = prompt("Athlete Name?");
+      if (name) fetch('http://localhost:8000/api/athletes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name})
+      }).then(() => loadAthletes());
+    }
+
+    loadAthletes();
+    loadPractices();
+  </script>
+</body>
+</html>
