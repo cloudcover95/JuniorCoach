@@ -1,19 +1,16 @@
 # JuniorCoach
 
-**Local Coaching Organization Suite**  
-A comprehensive, privacy-first platform for youth/junior sports coaches and small organizations.
+**Local-First Sports Coaching & Performance Platform**
 
-## Quick Start
+JuniorCoach is a sovereign, local-first platform for coaching, athlete tracking, practice planning, and performance analysis. It integrates with the broader JuniorCloud LLC sensing and intelligence stack.
 
-```bash
-git clone https://github.com/cloudcover95/JuniorCoach.git
-cd JuniorCoach
+## Integration with the Ecosystem
 
-pip install fastapi uvicorn sqlalchemy pydantic python-multipart
-python backend/database.py
-uvicorn backend.main:app --reload --port 8000
-```
+| Component       | Role                                              |
+|-----------------|----------------------------------------------------|
+| **JuniorClimbs** | Performance imaging and movement analysis         |
+| **crispy-mouse** | Real-time biometric and input layer               |
+| **BitNet-mlx**   | AI-assisted coaching insights                     |
+| **JuniorHome**   | Central orchestration                             |
 
-Open `frontend/index.html` in your browser.
-
-Built with ❤️ for local coaches.
+JuniorCoach brings the performance intelligence layer to the sovereign edge stack, combining sensing, memory, and reasoning for real coaching use cases.
